@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма занесения данных для ЭП</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- <======================== Форма ========================> -->
+    <div class="form_container">        
+        <form action="" method="post">
+            <div class="form__block">
+                <label for="name">Имя</label>
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Иван"
+                    required 
+                />
+                <label for="surname">Фамилия</label>
+                <input
+                    type="text"
+                    name="surname"
+                    id="surname"
+                    placeholder="Иванов"
+                    required 
+                />
+                <label for="lastname">Отчество</label>   
+                <input
+                    type="text"
+                    name="lastname"
+                    id="lastname"
+                    placeholder="Иванович"
+                    required 
+                />             
+                <label for="release_date">Дата выпуска</label>
+                <input
+                    type="date"
+                    name="release_date"
+                    id="release_date"
+                    required
+                />
+                <label for="expiry_date">Дата истечения</label>
+                <input
+                    type="date"
+                    name="expiry_date"
+                    id="expiry_date"
+                    required
+                />
+            </div>
+            <div class="form__block">
+                <p>Заполните, как минимум, 1 поле:</p>
+                <label class="email" for="email">Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="ivan@gmail.com"
+                />
+                <p class="plus">+</p>
+                <label for="telegram_phone">Номер телефона телеграма</label>
+                <input
+                    type="text"
+                    name="telegram_phone"
+                    id="telegram_phone"
+                    placeholder="79999999999"
+                />
+                <p class="at">@</p>
+                <label for="telegram_nick">Ник телеграма</label>
+                <input
+                    type="text"
+                    name="telegram_nick"
+                    id="telegram_nick"
+                    placeholder="ivan123"
+                />
+            </div>
+            <div class="form__submit">
+                <button type="submit" id="submit">Сохранить</button>
+            </div>
+        </form>
+    </div>
+    <!-- <======================== Конец формы ========================> -->
+</body>
+</html> 

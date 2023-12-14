@@ -1,0 +1,151 @@
+/* <==================== Стилизация по-умолчанию ====================> */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    --body-background-color: #9C9C98;
+    --input-background-color: #F5E6CC;
+    --button-background-color: #FCCD04;
+
+    --input-color: #434343;
+    --label-color: #FFFAE8;
+
+    --form-width: 85%;
+    --form-block-width: 40%;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--body-background-color);
+    font-size: 2rem;
+    font-family: "Roboto", sans-serif;
+}
+/* <==================== Конец стилизации по-умолчанию ====================> */
+
+/* <==================== Media ====================> */
+@media (min-width: 0) {
+    :root {
+        --form-width: 80%;
+        --form-block-width: 100%;
+    }     
+    form {
+        flex-direction: column;
+    }    
+}
+
+@media (min-width: 500px) {
+    :root {
+        --form-width: 60%;
+    }    
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --form-width: 80%;
+        --form-block-width: 40%;
+    }
+    form {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }    
+}
+
+@media (min-width: 1600px) {
+    :root {
+        --form-width: 60%;
+    }    
+}
+/* <==================== Конец media ====================> */
+
+
+/* <==================== Форма ====================> */
+.form_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    margin-inline: auto;   
+    width: var(--form-width);
+    padding: 5rem 0;
+    word-wrap: break-word;
+}
+
+form {
+    width: 100%;
+    display: flex;
+}
+
+.form__block {
+    width: var(--form-block-width);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.form__block p:first-child {
+    margin-top: 3.5rem;  
+    align-self: self-start;
+}
+
+input {
+    font-size: 2.4rem;
+    width: 100%;
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    border-radius: 1rem;
+    background-color: var(--input-background-color);
+}
+
+label {
+    margin-bottom: 0.5rem;
+    margin-top: 3rem;
+    font-size: 1.8rem;
+    color: var(--label-color);    
+    width: 100%;
+}
+
+label:first-child {
+    margin-top: 0;
+}
+
+.email {
+    margin-top: 1rem;
+}
+
+.plus {
+    position: absolute;
+    top: 23rem;
+    left: 0.6rem;
+}
+
+.at {
+    position: absolute;
+    top: 34.6rem;
+    left: 0.1rem;
+}
+
+.form__submit {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10rem;
+}
+
+button {
+    width: var(--form-block-width);
+    background-color: var(--button-background-color);
+    font-size: 2.5rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+}
+/* <==================== Конец формы ====================> */
