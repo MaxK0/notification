@@ -90,12 +90,17 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
 }
 
 .form__block p:first-child {
     margin-top: 3.5rem;  
     align-self: self-start;
+}
+
+.form__block small {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    color: darkred;
 }
 
 input {
@@ -104,6 +109,10 @@ input {
     padding: 1.5rem 1.5rem 1.5rem 2rem;
     border-radius: 1rem;
     background-color: var(--input-background-color);
+}
+
+input[aria-invalid="true"] {
+    border: 0.2rem solid darkred;
 }
 
 label {
@@ -118,20 +127,27 @@ label:first-child {
     margin-top: 0;
 }
 
+.relative_block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
 .email {
     margin-top: 1rem;
 }
 
 .plus {
     position: absolute;
-    top: 23rem;
+    top: 4.1rem;
     left: 0.6rem;
 }
 
 .at {
     position: absolute;
-    top: 34.6rem;
-    left: 0.1rem;
+    top: 4.1rem;
+    left: 0.2rem;
 }
 
 .form__submit {
@@ -147,5 +163,6 @@ button {
     font-size: 2.5rem;
     padding: 1.5rem;
     border-radius: 1rem;
+    cursor: pointer;
 }
 /* <==================== Конец формы ====================> */
