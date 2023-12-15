@@ -153,8 +153,16 @@ label:first-child {
 .form__submit {
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin-top: 10rem;
+}
+
+.form__submit small {
+    color: gold;
+    margin-top: 2rem;
+    font-size: 2rem;
 }
 
 button {

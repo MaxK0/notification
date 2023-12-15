@@ -64,4 +64,62 @@ if (!empty($_SESSION['validation'])) {
     redirect('/layout/index.php');
 }
 
+if (empty($lastname)) $lastname = null;
+if (empty($email)) $email = null;
+if (empty($telegramPhone)) $telegramPhone = null;
+if (empty($telegramNick)) $telegramNick = null;
+
+//Добавление данных в БД
+$pdo = getPDO();
+
+$userId = isDataExists(pdo: $pdo, table: 'user', elementDB: 'surname', elementProgram: $surname);
+$emailId = isDataExists(pdo: $pdo, table: 'email', elementDB: 'email', elementProgram: $email);
+$telegramId = null;
+
+if (!empty($telegramPhone)) $telegramId = isDataExists(pdo: $pdo, table: 'telegram', elementDB: 'phone', elementProgram: $telegramPhone);
+if (!$telegramId && !empty($telegramNick)) $telegramId = isDataExists(pdo: $pdo, table: 'telegram', elementDB: 'nick', elementProgram: $telegramNick);
+
+if (!$userId) {
+    $query = "INSERT INTO users (name, surname, lastname) VALUES (:name, :surname, :lastname)";
+    $params = [
+        'name' => $name,
+        'surname' => $surname,
+        'lastname' => $lastname,    
+    ];
+    $userId = addData($pdo, $query, $params);
+}
+
+if (!empty($email) && !$emailId) {
+    $query = "INSERT INTO emails (email) VALUES (:email)";
+    $params = [
+        'email' => $email
+    ];
+    $emailId = addData($pdo, $query, $params);
+}
+
+if ((!empty($telegramNick) || !empty($telegramPhone)) && !$telegramId) {
+    $query = "INSERT INTO telegrams (phone, nick) VALUES (:phone, :nick)";
+    $params = [
+        'phone' => $telegramPhone,
+        'nick' => $telegramNick
+    ];
+    $telegramId = addData($pdo, $query, $params);
+}
+
+if (!empty($userId) && (!empty($emailId) || !empty($telegramId))) {
+    $query = "INSERT INTO signatures (user, release_date, expiry_date, email, telegram) VALUES (:user, :release_date, :expiry_date, :email, :telegram)";
+    $params = [
+        'user' => $userId,
+        'release_date' => $releaseDate,
+        'expiry_date' => $expiryDate,
+        'email' => $emailId,
+        'telegram' => $telegramId
+    ];
+    addData($pdo, $query, $params);
+
+    addValidationError(fieldName: 'submit', message: 'Информация сохранена');
+    $_SESSION['old'] = [];
+}
+
+redirect('/layout/index.php');
 

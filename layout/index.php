@@ -131,7 +131,10 @@
             </div>
 
             <div class="form__submit">
-                <button type="submit" id="submit">Сохранить</button>
+                <button type="submit" id="submit">Сохранить</button>                  
+                <?php if (hasValidationError('submit')):?>
+                    <small><?php validationErrorMessage('submit')?></small>
+                <?php endif?>               
             </div>
         </form>
     </div>
