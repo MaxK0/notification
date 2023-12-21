@@ -2,6 +2,7 @@
 
 require_once '../helpers.php';
 
+
 //Получение данных с формы, если нет, то null.
 $name = $_POST['name'] ?? null;
 $surname = $_POST['surname'] ?? null;
@@ -42,13 +43,13 @@ if (!empty($lastname) && strlen($lastname) > 45) {
 
 // Проверка даты выпуска на пустоту и, чтобы она была не больше, чем текущая дата.
 // Можно ограничить эту дату и по минимально возможному значению, если нужно.
-if (empty($releaseDate) || $releaseDate > date('YYYY-mm-dd')) {
+if (empty($releaseDate) || $releaseDate > date('Y-m-d')) {
     addValidationError(fieldName: 'release_date', message: 'Недопустимая дата');
 }
 
 // Проверка даты истечения на пустоту и, чтобы она была не меньше, чем текущая дата.
 // Можно ограничить эту дату и по максимально возможному значению, если нужно.
-if (empty($expiryDate) || $expiryDate < date('YYYY-mm-dd')) {
+if (empty($expiryDate) || $expiryDate < date('Y-m-d')) {
     addValidationError(fieldName: 'expiry_date', message: 'Недопустимая дата');
 }
 
@@ -74,7 +75,7 @@ if (!empty($telegramNick) && !preg_match('/^[a-z]{1}[a-z\d_]{3,31}$/i', $telegra
 
 // Если обнаружены неправильные поля, то снова пользователя отправляют заполнять данные, не давая идти программе дальше.
 if (!empty($_SESSION['validation'])) {
-    redirect('/layout/index.php');
+    redirect('../../layout/index.php');
 }
 
 // Присваивание null к необязательным полям, если пустые.
@@ -149,5 +150,5 @@ if (!empty($userId) && (!empty($emailId) || !empty($telegramId))) {
     $_SESSION['old'] = []; // Очищение прошлых значений в полях.
 }
 
-redirect('/layout/index.php'); // Перенаправление обратно на странцицу ввода данных.
+redirect('../../layout/index.php'); // Перенаправление обратно на странцицу ввода данных.
 
