@@ -28,7 +28,7 @@ CREATE TABLE `emails` (
   PRIMARY KEY (`email_id`),
   UNIQUE KEY `user_id_UNIQUE` (`email_id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `emails` (
 
 LOCK TABLES `emails` WRITE;
 /*!40000 ALTER TABLE `emails` DISABLE KEYS */;
-INSERT INTO `emails` VALUES (5,'dfas@gmail.com'),(4,'ivan123@gmail.com'),(1,'ivan@gmail.com'),(3,'max@gmail.com');
+INSERT INTO `emails` VALUES (1,'maxkorakov@gmail.com');
 /*!40000 ALTER TABLE `emails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +63,7 @@ CREATE TABLE `signatures` (
   CONSTRAINT `fk_signatures_telegrams1` FOREIGN KEY (`telegram`) REFERENCES `telegrams` (`telegram_id`),
   CONSTRAINT `fk_signatures_users1` FOREIGN KEY (`user`) REFERENCES `users` (`user_id`),
   CONSTRAINT `fk_users_emails` FOREIGN KEY (`email`) REFERENCES `emails` (`email_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `signatures` (
 
 LOCK TABLES `signatures` WRITE;
 /*!40000 ALTER TABLE `signatures` DISABLE KEYS */;
-INSERT INTO `signatures` VALUES (1,2,'2020-12-12','2024-12-12',1,NULL),(2,3,'2021-08-28','2024-08-27',3,1),(3,3,'2023-10-23','2024-10-24',NULL,1),(4,4,'2023-10-23','2024-10-24',4,2),(5,5,'2005-10-10','2025-12-15',5,NULL),(6,2,'2023-03-12','2025-10-28',NULL,4),(7,7,'2022-12-15','2024-12-12',1,6),(8,8,'2020-12-12','2026-08-18',NULL,7),(9,2,'2005-12-12','2028-12-12',NULL,8);
+INSERT INTO `signatures` VALUES (1,1,'2020-12-12','2023-12-30',1,1);
 /*!40000 ALTER TABLE `signatures` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,14 +85,13 @@ DROP TABLE IF EXISTS `telegrams`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `telegrams` (
   `telegram_id` int NOT NULL AUTO_INCREMENT,
-  `phone` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `chat_id` int DEFAULT NULL,
   `nick` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   PRIMARY KEY (`telegram_id`),
   UNIQUE KEY `telegram_id_UNIQUE` (`telegram_id`),
-  UNIQUE KEY `telegram_phone_UNIQUE` (`phone`),
-  UNIQUE KEY `telegram_nick_UNIQUE` (`nick`),
-  UNIQUE KEY `phone` (`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
+  UNIQUE KEY `telegram_phone_UNIQUE` (`chat_id`),
+  UNIQUE KEY `telegram_nick_UNIQUE` (`nick`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +100,7 @@ CREATE TABLE `telegrams` (
 
 LOCK TABLES `telegrams` WRITE;
 /*!40000 ALTER TABLE `telegrams` DISABLE KEYS */;
-INSERT INTO `telegrams` VALUES (1,NULL,'max12'),(2,'79999999999',NULL),(4,'79631008992',NULL),(6,NULL,'danil'),(7,NULL,'asdfs243'),(8,NULL,'ivan');
+INSERT INTO `telegrams` VALUES (1,820512162,'MaxK07');
 /*!40000 ALTER TABLE `telegrams` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,7 +118,7 @@ CREATE TABLE `users` (
   `lastname` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_id_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +127,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (2,'Иван','Иванов','Иванович'),(3,'Максим','Коряков','Александрович'),(4,'Максим','Иванов','Александрович'),(5,'Илья','Морозов','Иванович'),(6,'Артем','Носов',NULL),(7,'Данил','Максимов',NULL),(8,'Иван','Ильинов',NULL);
+INSERT INTO `users` VALUES (1,'Максим','Коряков','Александрович');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -141,4 +140,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-15 16:24:57
+-- Dump completed on 2023-12-22  3:38:35
