@@ -1,6 +1,6 @@
 <?php
 
-require_once '../helpers.php';
+require_once '../functions.php';
 
 
 //Получение данных с формы, если нет, то null.
@@ -113,7 +113,7 @@ if (!empty($email) && !$emailId) {
     $emailId = addData($pdo, $query, $params);
 }
 
-// Добавление телеграмм контактов, если хотя бы один указан и нет в таблице
+// Добавление телеграмм ника
 if (!empty($telegramNick) && !$telegramId) {
     $query = "INSERT INTO telegrams (nick) VALUES (:nick)";
     $params = [
@@ -134,9 +134,13 @@ if (!empty($userId) && (!empty($emailId) || !empty($telegramId))) {
     ];
     addData($pdo, $query, $params);
 
-    addValidationError(fieldName: 'submit', message: 'Информация сохранена'); // Добавление в сессию для отображения, что информация сохранилась.
-    $_SESSION['old'] = []; // Очищение прошлых значений в полях.
+    // Добавление в сессию для отображения, что информация сохранилась.
+    addValidationError(fieldName: 'submit', message: 'Информация сохранена'); 
+
+    // Очищение прошлых значений в полях.
+    $_SESSION['old'] = [];
 }
 
-redirect('../../layout/index.php'); // Перенаправление обратно на странцицу ввода данных.
+// Перенаправление обратно на странцицу ввода данных.
+redirect('../../layout/index.php'); 
 
