@@ -43,10 +43,22 @@ function sendEmail(array $mailConfig, string $to, string $subject, string $body)
     }
 }
 
+function sendTg(string $url, int $chatId, string $text) {
+    $con = curl_init();
 
-function getEmailFromDB(PDO $pdo, array $row) : string {    
-    $query = "SELECT email FROM emails WHERE email_id = {$row['email']}";
+    $msg=$url."sendMessage?chat_id=".$chatId."&text=$text";
+    
+    curl_setopt($con, CURLOPT_URL, $msg);
+    curl_setopt($con, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($con, CURLOPT_HEADER, 0);
+
+    curl_exec($con);
+
+    curl_close($con);    
+}
+
+
+function getDataFromDB(PDO $pdo, string $query) : mixed {
     $stmt = $pdo->query($query);
-
     return $stmt->fetch()[0];
 }

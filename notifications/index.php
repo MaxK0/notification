@@ -2,6 +2,10 @@
 
 // Программа будет срабатывать раз в сутки, проходясь по БД и рассылая уведомления,
 // если срок истечения больше текущего на месяц, неделю или уже равен.
+// Она будет смотреть: указана ли почта, либо id чата телеграмма пользователя, либо всё вместе.
+// Если почта, то отправка с помощью библиотеки PHPMailer.
+// Если тг, то отправка с помощью тг бота.
+
 
 require_once 'functions.php';
 require_once 'vendor/autoload.php';
@@ -9,42 +13,82 @@ $config = require_once 'config.php';
 
 const SECONDSINDAY = 24 * 60 * 60;
 
-while (True) {
+$botToken = $config['bot']['token'];
+$url = $config['bot']['url'] . $botToken . '/';
+
+// Бесконечный цикл для регулярной проверки: нужно ли расслать уведомления.
+while (true) {
+    // Подключение к БД.
     $pdo = getPDO($config['db']);
-
-    $now = new DateTime(); // Текущее время.
-
+    
+    // Получаем текущую дату.
+    $now = new DateTime('now', new DateTimeZone('UTC'));
+    $now->setTime(0, 0, 0); // Устанавливаем время на полночь.
+    
+    // Выбираем все записи из таблицы, где хранится информация об ЭП.
     $query = "SELECT * FROM signatures";
     $stmt = $pdo->query($query);
-
-    while ($row = $stmt->fetch()) {
-        if (strtotime(date('Y-m-d')) > strtotime($row['expiry_date'])) continue;    
-
-        $date = DateTime::createFromFormat("Y-m-d", $row['expiry_date']); // Получаем дату истечения из БД.
-        $dateDiff = $date->diff($now); // Получаем разницу дат.
-
-        if (empty($row['email'])) continue;
+    
+    // Проходим по каждой строке таблицы.
+    while ($row = $stmt->fetch()) {        
+        // Пропускаем записи, которые уже просрочены.
+        if (strtotime(date('Y-m-d')) > strtotime($row['expiry_date'])) continue;
+        
+        // Получаем дату истечения ЭП из БД.
+        $date = DateTime::createFromFormat("Y-m-d", $row['expiry_date']);
+        // Получаем разницу в днях между текущей датой и датой истечения ЭП.
+        $dateDiff = $date->diff($now);
+        
+        // Пропускаем записи, которым осталось больше месяца.
         if ($dateDiff->m > 1 || $dateDiff->y > 0) continue;
+        
+        // Инициализация переменных для уведомлений.
 
+        // Для почты:
+        $isMail = false;
         $to = null;
         $subject = 'Истечение срока ЭП';
-        $body = null;
-
-        if (date('Y-m-d') == $row['expiry_date']) {        
-            $to = getEmailFromDB($pdo, $row);        
-            $body = 'Ваш срок действия ЭП истек.';
-        }
+        $body = '';
+        
+        // Для телеграмма:
+        $isTg = false;
+        $chatId = null;
+        
+        // Формирование текста уведомления в зависимости от оставшегося времени.
+        if (date('Y-m-d') == $row['expiry_date']) {
+            $isMail = !empty($row['email']);
+            $isTg = !empty($row['telegram']);
+            $body .= 'ваш срок действия ЭП истек.';
+        } 
         elseif ($dateDiff->d == 7) {
-            $to = getEmailFromDB($pdo, $row);
-            $body = 'Осталась 1 неделя до конца срока действия ЭП.';
-        }
+            $isMail = !empty($row['email']);
+            $isTg = !empty($row['telegram']);
+            $body .= 'осталась 1 неделя до конца срока действия ЭП.';      
+        } 
         elseif ($dateDiff->m == 1 && $dateDiff->d == 0) {
-            $to = getEmailFromDB($pdo, $row);
-            $body = 'Остался 1 месяц до конца срока действия ЭП.';
+            $isMail = !empty($row['email']);
+            $isTg = !empty($row['telegram']);
+            $body .= 'остался 1 месяц до конца срока действия ЭП.';
         }
-
-        if (!empty($to)) sendEmail($config, $to, $subject, $body);
+        
+        // Получение адреса электронной почты, если есть в таблице.
+        if ($isMail) {
+            $query = "SELECT email FROM emails WHERE email_id = {$row['email']}";
+            $to = getDataFromDB($pdo, $query);
+        }
+        
+        // Получение id пользователя, если есть в таблице.
+        if ($isTg) {
+            $query = "SELECT chat_id FROM telegrams WHERE telegram_id = {$row['telegram']}";
+            $chatId = getDataFromDB($pdo, $query);
+        }
+        
+        // Отправка уведомлений.
+        if (!empty($to)) sendEmail($config['mail'], $to, $subject, $body);
+        if (!empty($chatId)) sendTg($url, $chatId, $body);
     }
     
-    sleep(SECONDSINDAY); //Дожидаемся следующих суток
+    // Пауза перед следующей проверкой.
+    sleep(SECONDSINDAY);
 }
+

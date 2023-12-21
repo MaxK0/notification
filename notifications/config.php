@@ -20,4 +20,8 @@ return [
     'from_name' => 'Компания x',
     'is_html' => true
   ],
+  'bot' => [
+    'token' => '6748061151:AAEeAYx13C62g7kX0C34_2IBxkHsaVLGXJw',
+    'url' => 'https://api.telegram.org/bot'
+  ],
 ];
