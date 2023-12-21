@@ -10,7 +10,6 @@ $lastname = $_POST['lastname'] ?? null;
 $releaseDate = $_POST['release_date'] ?? null;
 $expiryDate = $_POST['expiry_date'] ?? null;
 $email = $_POST['email'] ?? null;
-$telegramPhone = $_POST['telegram_phone'] ?? null;
 $telegramNick = $_POST['telegram_nick'] ?? null;
 
 // Добавление значений переменных в сессию для последующего изъятия.
@@ -20,7 +19,6 @@ addOldValue(key: 'lastname', value: $lastname);
 addOldValue(key: 'release_date', value: $releaseDate);
 addOldValue(key: 'expiry_date', value: $expiryDate);
 addOldValue(key: 'email', value: $email);
-addOldValue(key: 'telegram_phone', value: $telegramPhone);
 addOldValue(key: 'telegram_nick', value: $telegramNick);
 
 
@@ -54,18 +52,13 @@ if (empty($expiryDate) || $expiryDate < date('Y-m-d')) {
 }
 
 // Проверка на то, чтобы был указан хотя бы один контакт для уведомлений.
-if (empty($email) && empty($telegramPhone) && empty($telegramNick)) {
+if (empty($email) && empty($telegramNick)) {
     addValidationError(fieldName: 'contact', message: 'Не указан ни один контакт');
 }
 
 // Если указана почта, то проверка по встроенному фильтру.
 if (!empty($email) && !filter_var(value: $email, filter: FILTER_VALIDATE_EMAIL)) {
     addValidationError(fieldName: 'email', message: 'Указана неверная почта');
-}
-
-// Если указан телефон, то проверка, чтобы количество знаков было только 11 и это были цифры.
-if (!empty($telegramPhone) && !preg_match('/^\d{11}$/', $telegramPhone)) {
-    addValidationError(fieldName: 'telegram_phone', message: 'Неверный номер телефона');
 }
 
 // Если указан никнейм, то проверка, чтобы ник начинался только с буквы, а дальше от 3 до 31 знака либо буквы, либо цифры, либо _ с любым регистром.
@@ -83,7 +76,6 @@ if (!empty($_SESSION['validation'])) {
 // В итоге, в БД будут пустые значения, а нужно null.
 if (empty($lastname)) $lastname = null;
 if (empty($email)) $email = null;
-if (empty($telegramPhone)) $telegramPhone = null;
 if (empty($telegramNick)) $telegramNick = null;
 
 
@@ -98,10 +90,7 @@ $pdo = getPDO();
 // Получение id, если в таблицах уже есть вводимые данные, иначе null.
 $userId = getIdIfDataExists(pdo: $pdo, table: 'user', elementDB: 'surname', elementProgram: $surname);
 $emailId = getIdIfDataExists(pdo: $pdo, table: 'email', elementDB: 'email', elementProgram: $email);
-
-$telegramId = null;
-if (!empty($telegramPhone)) $telegramId = getIdIfDataExists(pdo: $pdo, table: 'telegram', elementDB: 'phone', elementProgram: $telegramPhone);
-if (!$telegramId && !empty($telegramNick)) $telegramId = getIdIfDataExists(pdo: $pdo, table: 'telegram', elementDB: 'nick', elementProgram: $telegramNick);
+$telegramId = getIdIfDataExists(pdo: $pdo, table: 'telegram', elementDB: 'nick', elementProgram: $telegramNick);
 
 
 // Добавление пользователя, если его нет в таблице.
@@ -125,10 +114,9 @@ if (!empty($email) && !$emailId) {
 }
 
 // Добавление телеграмм контактов, если хотя бы один указан и нет в таблице
-if ((!empty($telegramNick) || !empty($telegramPhone)) && !$telegramId) {
-    $query = "INSERT INTO telegrams (phone, nick) VALUES (:phone, :nick)";
+if (!empty($telegramNick) && !$telegramId) {
+    $query = "INSERT INTO telegrams (nick) VALUES (:nick)";
     $params = [
-        'phone' => $telegramPhone,
         'nick' => $telegramNick
     ];
     $telegramId = addData($pdo, $query, $params);

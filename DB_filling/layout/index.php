@@ -98,22 +98,6 @@
                 <?php endif?>
 
                 <div class="relative_block">
-                    <p class="plus">+</p>
-                    <label for="telegram_phone">Номер телефона телеграма</label>
-                    <input
-                        type="text"
-                        name="telegram_phone"
-                        id="telegram_phone"
-                        placeholder="79999999999"
-                        value="<?php echo old('telegram_phone')?>"
-                        <?php validationErrorAttr('telegram_phone');?>
-                    />
-                    <?php if (hasValidationError('telegram_phone')):?>
-                        <small><?php validationErrorMessage('telegram_phone')?></small>
-                    <?php endif?>
-                </div>
-
-                <div class="relative_block">
                     <p class="at">@</p>
                     <label for="telegram_nick">Ник телеграма</label>
                     <input
