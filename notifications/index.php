@@ -43,12 +43,14 @@ while (true) {
         if ($dateDiff->m > 1 || $dateDiff->y > 0) continue;
         
         // Инициализация переменных для уведомлений.
+        $surname = getDataFromDB($pdo, "SELECT surname FROM users WHERE user_id = {$row['user']}");
+        $name = getDataFromDB($pdo, "SELECT name FROM users WHERE user_id = {$row['user']}");
+        $body = $surname . " " . $name . ", ";
 
         // Для почты:
         $isMail = false;
         $to = null;
-        $subject = 'Истечение срока ЭП';
-        $body = '';
+        $subject = 'Истечение срока ЭП';        
         
         // Для телеграмма:
         $isTg = false;
